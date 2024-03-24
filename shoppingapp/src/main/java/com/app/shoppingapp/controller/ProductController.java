@@ -1,7 +1,10 @@
 package com.app.shoppingapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +30,15 @@ public class ProductController {
 		return new ResponseEntity<Product> (addedProductImage,HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/getProduct/{productId}")
+	@GetMapping("/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable("productId")long productId){
 		Product productDtls = productService.getProductDtls(productId);
 		return new ResponseEntity<Product> (productDtls,HttpStatus.OK);
+	}
+	
+	@GetMapping("/images/{productId}")
+	public ResponseEntity<byte[]> getProductImages(@PathVariable("productId")Long productId){
+		List<byte[]> productImagesList = productService.getProductImages(productId);
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_JPEG).body(productImagesList.get(0));
 	}
 }
